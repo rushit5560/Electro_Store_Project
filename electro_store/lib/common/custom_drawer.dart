@@ -1,4 +1,6 @@
 import 'package:electro_store/common/app_images.dart';
+import 'package:electro_store/screens/all_order_screen/all_order_screen.dart';
+import 'package:electro_store/screens/category_screen/category_screen.dart';
 import 'package:electro_store/screens/collection_screen/collection_screen.dart';
 import 'package:electro_store/screens/contact_us_screen/contact_us_screen.dart';
 import 'package:electro_store/screens/notification_screen/notification_screen.dart';
@@ -29,6 +31,8 @@ class CustomDrawer extends StatelessWidget {
                         const SizedBox(height: 15),
                         HomeButton(),
                         ProfileButton(),
+                        CategoryButton(),
+                        OrderButton(),
                         CollectionButton(),
                         NotificationButton(),
                         SettingButton(),
@@ -156,6 +160,42 @@ class CollectionButton extends StatelessWidget {
       leading: Icon(Icons.store_rounded, color: Colors.white),
       title: Text(
         'Collection',
+        textScaleFactor: 1.2,
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
+}
+
+class OrderButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Get.back();
+        Get.to(() => AllOrderScreen());
+      },
+      leading: Icon(Icons.store_rounded, color: Colors.white),
+      title: Text(
+        'Order',
+        textScaleFactor: 1.2,
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
+}
+
+class CategoryButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Get.back();
+        Get.to(() => CategoryScreen());
+      },
+      leading: Icon(Icons.store_rounded, color: Colors.white),
+      title: Text(
+        'Category',
         textScaleFactor: 1.2,
         style: TextStyle(color: Colors.white),
       ),
