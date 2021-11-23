@@ -31,4 +31,5 @@ class AppImages {
   static const ic_collection6_img = root + 'collection6.jpg';
 
   static const ic_profile_img = root + 'profile.png';
+  static const ic_banner_img = root + 'banner.jpg';
 }
