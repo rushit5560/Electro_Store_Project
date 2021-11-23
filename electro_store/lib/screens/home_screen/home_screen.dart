@@ -5,6 +5,7 @@ import 'package:electro_store/common/custom_appbar.dart';
 import 'package:electro_store/common/custom_drawer.dart';
 import 'package:electro_store/controller/home_screen_controller/home_screen_controller.dart';
 import 'package:electro_store/models/collection_screen_model/collection_model.dart';
+import 'package:electro_store/screens/product_details_screen/product_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -207,6 +208,7 @@ class HomeScreen extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () {
                     print('$index');
+                    Get.to(()=> ProductDetailsScreen());
                   },
                   child: Container(
                     child: Column(
