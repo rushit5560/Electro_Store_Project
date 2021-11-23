@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:electro_store/common/app_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ContactUsScreenModule extends StatelessWidget {
   const ContactUsScreenModule({Key? key}) : super(key: key);
@@ -14,7 +17,7 @@ class ContactUsScreenModule extends StatelessWidget {
         child: Column(
           children: [
 
-            _mapModule(),
+            mapView(),
             const SizedBox(height: 10),
             FormModule(),
           ],
@@ -23,12 +26,34 @@ class ContactUsScreenModule extends StatelessWidget {
     );
   }
 
-  Widget _mapModule() {
-    return Container(
-      height: Get.height * 0.33,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.grey,
+  Widget mapView() {
+    final CameraPosition _kGooglePlex = CameraPosition(
+      target: LatLng(21.1860, 72.7944),
+      zoom: 7,
+    );
+    Completer<GoogleMapController> _controller = Completer();
+
+    return Material(
+      elevation: 8,
+      borderRadius: BorderRadius.circular(15),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: Container(
+          height: Get.height * 0.25,
+          width: Get.width,
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: GoogleMap(
+            mapType: MapType.normal,
+            initialCameraPosition: _kGooglePlex,
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
+            myLocationEnabled: true,
+          ),
+        ),
       ),
     );
   }

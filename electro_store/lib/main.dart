@@ -1,4 +1,5 @@
 import 'package:electro_store/screens/category_screen/category_screen.dart';
+import 'package:electro_store/screens/contact_us_screen/contact_us_screen.dart';
 import 'package:electro_store/screens/home_screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: appLightTheme(),
 
-      home: CategoryScreen(),
+      home: ContactUsScreen(),
     );
   }
 }
