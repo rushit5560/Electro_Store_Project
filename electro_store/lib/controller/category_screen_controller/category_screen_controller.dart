@@ -1,17 +1,42 @@
-import 'package:electro_store/common/app_images.dart';
+import 'dart:convert';
+
+import 'package:electro_store/common/api_url.dart';
 import 'package:electro_store/models/category_screen_model/category_model.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 class CategoryScreenController extends GetxController {
-  List<CategoryModel> categoryList = [
-    CategoryModel(img: '${AppImages.ic_category1_img}',name: 'Mobile'),
-    CategoryModel(img: '${AppImages.ic_category2_img}',name: 'Laptop'),
-    CategoryModel(img: '${AppImages.ic_category3_img}',name: 'Headphone'),
-    CategoryModel(img: '${AppImages.ic_category4_img}',name: 'Speaker'),
-    CategoryModel(img: '${AppImages.ic_category5_img}',name: 'Washing Machine'),
-    CategoryModel(img: '${AppImages.ic_category6_img}',name: 'Camera'),
-    CategoryModel(img: '${AppImages.ic_category7_img}',name: 'Drone'),
-    CategoryModel(img: '${AppImages.ic_category8_img}',name: 'Security Camera'),
-    CategoryModel(img: '${AppImages.ic_category9_img}',name: 'Plug'),
-  ];
+
+  RxBool isLoading = false.obs;
+  RxBool isStatus = false.obs;
+  List<Datum> categoryLists = [];
+
+  @override
+  void onInit() {
+    getCategoryData();
+    super.onInit();
+  }
+
+  getCategoryData() async {
+    isLoading(true);
+    String url = ApiUrl.CategoryApi;
+    print('Url : $url');
+
+    try{
+      http.Response response = await http.get(Uri.parse(url));
+
+      CategoryData categoryData = CategoryData.fromJson(json.decode(response.body));
+      isStatus = categoryData.success.obs;
+
+      if(isStatus.value){
+        categoryLists = categoryData.data;
+      } else {
+        print('Category False False');
+      }
+    } catch(e) {
+      print('Category Data Error : $e');
+    } finally {
+      isLoading(false);
+    }
+  }
 }

@@ -2,6 +2,8 @@
 
 import 'package:electro_store/common/app_colors.dart';
 import 'package:electro_store/common/common_widgets.dart';
+import 'package:electro_store/controller/sign_up_screen_controller/sign_up_screen_controller.dart';
+import 'package:electro_store/screens/sign_in_screen/sign_in_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,6 +16,11 @@ class UserNameField extends StatelessWidget {
     return TextFormField(
       controller: userNameFieldController,
       decoration: inputDecoration(0, 'UserName'),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "UserName Should not be Empty";
+        }
+      },
     );
   }
 }
@@ -27,6 +34,14 @@ class EmailField extends StatelessWidget {
     return TextFormField(
       controller: emailFieldController,
       decoration: inputDecoration(1, 'Email'),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Email Should not be Empty";
+        }
+        if (!value.contains('@')) {
+          return 'Email should be Valid';
+        }
+      },
     );
   }
 }
@@ -40,6 +55,11 @@ class PasswordField extends StatelessWidget {
     return TextFormField(
       controller: passwordFieldController,
       decoration: inputDecoration(2, 'Password'),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Password Should not be Empty";
+        }
+      },
     );
   }
 }
@@ -47,13 +67,38 @@ class PasswordField extends StatelessWidget {
 
 
 class SignUpButton extends StatelessWidget {
-  const SignUpButton({Key? key}) : super(key: key);
+  //SignUpButton({Key? key}) : super(key: key);
+
+  SignUpScreenController signUpScreenController;
+  TextEditingController userNameFieldController;
+  TextEditingController emailFieldController;
+  TextEditingController passwordFieldController;
+  GlobalKey<FormState> formkey;
+
+  SignUpButton({
+    required this.userNameFieldController,
+    required this.emailFieldController,
+    required this.passwordFieldController,
+    required this.signUpScreenController,
+    required this.formkey
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print('Login');
+        print('Sign Up');
+        if (formkey.currentState!.validate()) {
+          print('${userNameFieldController.text.trim()}');
+          print('${emailFieldController.text.trim()}');
+          print('${passwordFieldController.text.trim()}');
+          signUpScreenController.getRegisterData(
+            userNameFieldController.text.trim().toString(),
+            emailFieldController.text.trim().toLowerCase().toString(),
+            passwordFieldController.text.trim().toString(),
+          );
+        }
+
       },
       child: Container(
         width: Get.width,
@@ -93,6 +138,7 @@ class SignInText extends StatelessWidget {
         GestureDetector(
           onTap: () {
             print('Sign In');
+            Get.to(()=> SignInScreen());
           },
           child: Text(
             'Sign In',

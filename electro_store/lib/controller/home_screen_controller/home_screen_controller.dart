@@ -1,20 +1,55 @@
+import 'dart:convert';
+import 'package:electro_store/common/api_url.dart';
 import 'package:electro_store/common/app_images.dart';
-import 'package:electro_store/models/category_screen_model/category_model.dart';
 import 'package:electro_store/models/collection_screen_model/collection_model.dart';
+import 'package:electro_store/models/home_screen_model/banner_model.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+
 
 class HomeScreenController extends GetxController {
-  List<CategoryModel> categoryList = [
-    CategoryModel(img: '${AppImages.ic_category1_img}',name: 'Mobile'),
-    CategoryModel(img: '${AppImages.ic_category2_img}',name: 'Laptop'),
-    CategoryModel(img: '${AppImages.ic_category3_img}',name: 'Headphone'),
-    CategoryModel(img: '${AppImages.ic_category4_img}',name: 'Speaker'),
-    CategoryModel(img: '${AppImages.ic_category5_img}',name: 'Washing Machine'),
-    CategoryModel(img: '${AppImages.ic_category6_img}',name: 'Camera'),
-    CategoryModel(img: '${AppImages.ic_category7_img}',name: 'Drone'),
-    CategoryModel(img: '${AppImages.ic_category8_img}',name: 'Security Camera'),
-    // CategoryModel(img: '${AppImages.ic_category9_img}',name: 'Plug'),
-  ];
+  RxBool isLoading = false.obs;
+  RxBool isStatus = false.obs;
+
+  RxInt activeIndex = 0.obs;
+  RxList<Datum> bannerLists = RxList();
+
+
+
+  getBannerData() async {
+    isLoading(true);
+    String url = ApiUrl.BannerApi;
+    print('Url : $url');
+
+    try{
+      http.Response response = await http.get(Uri.parse(url));
+
+      BannerData bannerList = BannerData.fromJson(json.decode(response.body));
+      isStatus = bannerList.success.obs;
+
+      if(isStatus.value){
+        bannerLists = bannerList.data.obs;
+      } else {
+        print('Banner False False');
+      }
+    } catch(e) {
+      print('Banner Error : $e');
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  // List<CategoryModel> categoryList = [
+  //   CategoryModel(img: '${AppImages.ic_category1_img}',name: 'Mobile'),
+  //   CategoryModel(img: '${AppImages.ic_category2_img}',name: 'Laptop'),
+  //   CategoryModel(img: '${AppImages.ic_category3_img}',name: 'Headphone'),
+  //   CategoryModel(img: '${AppImages.ic_category4_img}',name: 'Speaker'),
+  //   CategoryModel(img: '${AppImages.ic_category5_img}',name: 'Washing Machine'),
+  //   CategoryModel(img: '${AppImages.ic_category6_img}',name: 'Camera'),
+  //   CategoryModel(img: '${AppImages.ic_category7_img}',name: 'Drone'),
+  //   CategoryModel(img: '${AppImages.ic_category8_img}',name: 'Security Camera'),
+  //   // CategoryModel(img: '${AppImages.ic_category9_img}',name: 'Plug'),
+  // ];
 
   List<CollectionModel> newArrivalList = [
     CollectionModel(
@@ -54,4 +89,11 @@ class HomeScreenController extends GetxController {
       inActivePrice: '210',
     ),
   ];
+
+
+  @override
+  void onInit() {
+    getBannerData();
+    super.onInit();
+  }
 }

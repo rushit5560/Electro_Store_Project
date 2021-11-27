@@ -1,3 +1,5 @@
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:electro_store/common/api_url.dart';
 import 'package:electro_store/common/app_colors.dart';
 import 'package:electro_store/common/app_images.dart';
 import 'package:electro_store/common/common_widgets.dart';
@@ -22,31 +24,34 @@ class HomeScreen extends StatelessWidget {
       endDrawer: CustomDrawer(),
 
       body: Stack(
-
         children: [
           ScreenBackground(),
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                children: [
-                  _searchField(),
-                  const SizedBox(height: 25),
-                  _banner(),
-                  const SizedBox(height: 10),
-                  _categoryList(),
-                  const SizedBox(height: 10),
-                  _newArrival(),
-                  const SizedBox(height: 10),
-                  _bestSeller(),
-                  const SizedBox(height: 10),
-                ],
-              ),
-            ),
+          Obx(
+            () => homeScreenController.isLoading.value
+                ? CustomCircularProgressIndicator()
+                : SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Column(
+                        children: [
+                          _searchField(),
+                          const SizedBox(height: 25),
+                          _banner(),
+                          carouselIndicator(),
+                          const SizedBox(height: 10),
+                          // _categoryList(),
+                          const SizedBox(height: 10),
+                          _newArrival(),
+                          const SizedBox(height: 10),
+                          _bestSeller(),
+                          const SizedBox(height: 10),
+                        ],
+                      ),
+                    ),
+                  ),
           ),
         ],
       ),
-
     );
   }
 
@@ -79,107 +84,153 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _banner() {
-    return Stack(
-      alignment: Alignment.centerLeft,
-      children: [
-        Container(
-          height: Get.width * 0.3,
-          width: Get.width,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              image: DecorationImage(
-                  image: AssetImage('${AppImages.ic_banner_img}'),
-                  fit: BoxFit.cover
-              )
-          ),
-        ),
-        Positioned(
-          left: 15,
-          child: Container(
-            width: Get.width * 0.30,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'New Headphone',
-                  textScaleFactor: 1.3,
-                  maxLines: 2,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                GestureDetector(
-                  onTap: () {print('Shop Now');},
-                  child: Text(
-                    'Shop Now',
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+    return Obx(
+          ()=> CarouselSlider.builder(
+        itemCount: homeScreenController.bannerLists.length,
+        itemBuilder: (context, index, realIndex) {
+          final imgUrl = ApiUrl.ApiMainPath + '${homeScreenController.bannerLists[index].imagePath}';
+          return buildImage(imgUrl, index);
+        },
+        options: CarouselOptions(
+            height: Get.width * 0.3,
+            autoPlay: true,
+            viewportFraction: 1,
+
+            onPageChanged: (index, reason) {
+                homeScreenController.activeIndex.value = index;
+            }),
+      ),
     );
   }
-
-  Widget _categoryList() {
-    return GridView.builder(
-      itemCount: homeScreenController.categoryList.length,
-      shrinkWrap: true,
-      physics: BouncingScrollPhysics(),
-      scrollDirection: Axis.vertical,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-          childAspectRatio: 0.7,
-      ),
-      itemBuilder: (context, index){
-        return Container(
-          child: Column(
-            children: [
-              Expanded(
-                flex: 75,
-                child: Material(
-                  borderRadius: BorderRadius.circular(10),
-                  elevation: 10,
-                  child: Container(
-                    width: Get.width,
-                    height: Get.height,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
+  //Carousel Slider Image
+  Widget buildImage(String urlImage, int index) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Stack(
+        alignment: Alignment.centerLeft,
+        children: [
+          Container(
+            height: Get.width * 0.3,
+            width: Get.width,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                    image: AssetImage('${AppImages.ic_banner_img}'),
+                    fit: BoxFit.cover)),
+          ),
+          Positioned(
+            left: 15,
+            child: Container(
+              width: Get.width * 0.30,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'New Headphone',
+                    textScaleFactor: 1.3,
+                    maxLines: 2,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Image.asset(
-                          '${homeScreenController.categoryList[index].img}'
+                  ),
+                  const SizedBox(height: 5),
+                  GestureDetector(
+                    onTap: () {
+                      print('Shop Now');
+                    },
+                    child: Text(
+                      'Shop Now',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-              Expanded(
-                flex: 25,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Text(
-                    '${homeScreenController.categoryList[index].name}',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
+
+  Widget carouselIndicator() {
+    return Obx(
+          () => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          homeScreenController.bannerLists.length,
+              (index) => Container(
+            margin: EdgeInsets.all(4),
+            width: 11,
+            height: 11,
+            decoration: BoxDecoration(
+              color: homeScreenController.activeIndex.value == index
+                  ? AppColors.kPinkColor
+                  : Colors.grey,
+              shape: BoxShape.circle,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+
+  // Widget _categoryList() {
+  //   return GridView.builder(
+  //     itemCount: homeScreenController.categoryList.length,
+  //     shrinkWrap: true,
+  //     physics: BouncingScrollPhysics(),
+  //     scrollDirection: Axis.vertical,
+  //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //       crossAxisCount: 4,
+  //       mainAxisSpacing: 10,
+  //       crossAxisSpacing: 10,
+  //         childAspectRatio: 0.7,
+  //     ),
+  //     itemBuilder: (context, index){
+  //       return Container(
+  //         child: Column(
+  //           children: [
+  //             Expanded(
+  //               flex: 75,
+  //               child: Material(
+  //                 borderRadius: BorderRadius.circular(10),
+  //                 elevation: 10,
+  //                 child: Container(
+  //                   width: Get.width,
+  //                   height: Get.height,
+  //                   decoration: BoxDecoration(
+  //                     color: Colors.white,
+  //                     borderRadius: BorderRadius.circular(10),
+  //                   ),
+  //                   child: Padding(
+  //                     padding: EdgeInsets.all(20),
+  //                     child: Image.asset(
+  //                         '${homeScreenController.categoryList[index].img}'
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //             Expanded(
+  //               flex: 25,
+  //               child: Padding(
+  //                 padding: EdgeInsets.symmetric(vertical: 8),
+  //                 child: Text(
+  //                   '${homeScreenController.categoryList[index].name}',
+  //                   maxLines: 1,
+  //                   overflow: TextOverflow.ellipsis,
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget _newArrival() {
     return Column(

@@ -1,4 +1,6 @@
+import 'package:electro_store/common/api_url.dart';
 import 'package:electro_store/common/app_colors.dart';
+import 'package:electro_store/common/common_widgets.dart';
 import 'package:electro_store/controller/collection_screen_controller/collection_screen_controller.dart';
 import 'package:electro_store/models/collection_screen_model/collection_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,25 +13,29 @@ class CollectionListModule extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(10),
-      child: GridView.builder(
-        itemCount: collectionScreenController.collectionList.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            childAspectRatio: 0.7
+    return Obx(()=>
+    collectionScreenController.isLoading.value
+        ? CustomCircularProgressIndicator() :
+       Padding(
+        padding: EdgeInsets.all(10),
+        child: GridView.builder(
+          itemCount: collectionScreenController.collectionLists.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: 0.7
+          ),
+          itemBuilder: (context, index){
+           // CollectionModel collectionItem= collectionScreenController.collectionList[index];
+            return _collectionListTile(index);
+          },
         ),
-        itemBuilder: (context, index){
-          CollectionModel collectionItem= collectionScreenController.collectionList[index];
-          return _collectionListTile(collectionItem, index);
-        },
       ),
     );
   }
 
-  Widget _collectionListTile(CollectionModel collectionItem, int index) {
+  Widget _collectionListTile(int index) {
     return GestureDetector(
       onTap: () {
         print('$index');
@@ -37,16 +43,16 @@ class CollectionListModule extends StatelessWidget {
       child: Container(
         child: Column(
           children: [
-            _imageModule('${collectionItem.img}'),
+            _imageModule(index),
             const SizedBox(height: 5),
-            _titleAndPriceModule(collectionItem),
+            _titleAndPriceModule(index),
           ],
         ),
       ),
     );
   }
 
-  Widget _imageModule(String img) {
+  Widget _imageModule(index) {
     return Expanded(
       flex: 80,
       child: Material(
@@ -56,7 +62,8 @@ class CollectionListModule extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
-              image: AssetImage('$img'),
+              image: NetworkImage(ApiUrl.ApiMainPath +
+                  "${collectionScreenController.collectionLists[index].showimg}"),
               fit: BoxFit.cover,
             ),
           ),
@@ -65,14 +72,14 @@ class CollectionListModule extends StatelessWidget {
     );
   }
 
-  Widget _titleAndPriceModule(CollectionModel collectionItem) {
+  Widget _titleAndPriceModule(index) {
     return Expanded(
       flex: 20,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${collectionItem.title}',
+            collectionScreenController.collectionLists[index].productname,
             maxLines: 1,
           ),
           const SizedBox(height: 5),
@@ -80,7 +87,7 @@ class CollectionListModule extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                '\$200',
+                collectionScreenController.collectionLists[index].productcost,
                 style: TextStyle(
                   color: AppColors.kPinkColor,
                   fontWeight: FontWeight.bold,
@@ -88,7 +95,7 @@ class CollectionListModule extends StatelessWidget {
               ),
               const SizedBox(width: 3),
               Text(
-                '\$210',
+                  collectionScreenController.collectionLists[index].productcost,
                 style: TextStyle(
                   decoration: TextDecoration.lineThrough
                 ),

@@ -110,3 +110,22 @@ class SocialButtons extends StatelessWidget {
     );
   }
 }
+
+class CustomCircularProgressIndicator extends StatelessWidget {
+  // const CustomCircularProgressIndicator({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: Get.width,
+      height: Get.height,
+      color: Colors.transparent,
+      child: Center(
+        child: CircularProgressIndicator(
+          color: AppColors.kPinkColor,
+          backgroundColor: Colors.white,
+        ),
+      ),
+    );
+  }
+}
