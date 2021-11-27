@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:electro_store/common/api_url.dart';
 import 'package:electro_store/common/app_colors.dart';
 import 'package:electro_store/common/app_images.dart';
 import 'package:electro_store/common/common_widgets.dart';
@@ -7,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   // const ProductDetailsScreen({Key? key}) : super(key: key);
@@ -24,21 +24,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       appBar: AppBar(
         title: Text('Product Detail'),
       ),
-      body: Stack(
-        children: [
-          ScreenBackground(),
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                _productImgModule(),
-                _productDetails(),
-                _rating(),
-                _giveReview(),
-                const SizedBox(height: 10),
-              ],
-            ),
-          ),
-        ],
+      body: Obx(
+        () => productDetailsScreenController.isLoading.value
+            ? CustomCircularProgressIndicator()
+            : Stack(
+                children: [
+                  ScreenBackground(),
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _productImgModule(),
+                        _productDetails(),
+                        _rating(),
+                        _giveReview(),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }
@@ -65,14 +69,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   // Use _productImgModule
   Widget carouselSlider() {
     return CarouselSlider.builder(
-      itemCount: productDetailsScreenController.productImgList.length,
+      itemCount: productDetailsScreenController.productDetailLists[0].images.length,
       itemBuilder: (context, index, realIndex) {
         return Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
               // color: Colors.white,
               image: DecorationImage(
-                image: AssetImage(productDetailsScreenController.productImgList[index]),
+                image: NetworkImage(
+                    ApiUrl.ApiMainPath + "${productDetailsScreenController.productDetailLists[0].images[index]}"),
                 fit: BoxFit.cover,
               )
           ),
@@ -83,21 +88,28 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           autoPlay: true,
           viewportFraction: 1,
           onPageChanged: (index, reason) {
-              setState(() {
                 productDetailsScreenController.activeIndex.value = index;
-              });
           }),
     );
   }
   Widget carouselIndicator() {
-    return AnimatedSmoothIndicator(
-      activeIndex: productDetailsScreenController.activeIndex.value,
-      count: productDetailsScreenController.productImgList.length,
-      effect: WormEffect(
-        dotHeight: 11,
-        dotWidth: 11,
-        activeDotColor: AppColors.kPinkColor,
-        dotColor: Colors.grey,
+    return Obx(
+          () => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          productDetailsScreenController.productDetailLists.length,
+              (index) => Container(
+            margin: EdgeInsets.all(4),
+            width: 11,
+            height: 11,
+            decoration: BoxDecoration(
+              color: productDetailsScreenController.activeIndex.value == index
+                  ? AppColors.kPinkColor
+                  : Colors.grey,
+              shape: BoxShape.circle,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -114,7 +126,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             children: [
               Expanded(
                 child: Text(
-                  'Present Faucibus elementum nisl',
+                  '${productDetailsScreenController.productDetailLists[0].productname}',
                   textScaleFactor: 1.1,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
@@ -143,7 +155,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                '\$200',
+                '\$${productDetailsScreenController.productDetailLists[0].productcost}',
                 textScaleFactor: 1.2,
                 style: TextStyle(
                   color: AppColors.kPinkColor,
@@ -152,7 +164,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
               const SizedBox(width: 10),
               Text(
-                '\$220',
+                '\$${productDetailsScreenController.productDetailLists[0].productcost}',
                 textScaleFactor: 1.2,
                 style: TextStyle(
                   decoration: TextDecoration.lineThrough
@@ -184,7 +196,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           const SizedBox(height: 5),
           //Product Description
           Text(
-            'Present Faucibus elementum nisl Present Faucibus elementum nisl Present Faucibus elementum nisl',
+            '${productDetailsScreenController.productDetailLists[0].fullText}',
             maxLines: 5,
             overflow: TextOverflow.ellipsis,
           ),

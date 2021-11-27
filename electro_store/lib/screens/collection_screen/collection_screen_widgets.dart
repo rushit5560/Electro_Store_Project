@@ -3,6 +3,7 @@ import 'package:electro_store/common/app_colors.dart';
 import 'package:electro_store/common/common_widgets.dart';
 import 'package:electro_store/controller/collection_screen_controller/collection_screen_controller.dart';
 import 'package:electro_store/models/collection_screen_model/collection_model.dart';
+import 'package:electro_store/screens/product_details_screen/product_details_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -38,7 +39,11 @@ class CollectionListModule extends StatelessWidget {
   Widget _collectionListTile(int index) {
     return GestureDetector(
       onTap: () {
-        print('$index');
+        Get.to(
+              () => ProductDetailsScreen(),
+          arguments:
+          collectionScreenController.collectionLists[index].id,
+        );
       },
       child: Container(
         child: Column(
