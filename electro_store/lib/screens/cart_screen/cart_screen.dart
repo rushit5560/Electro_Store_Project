@@ -11,6 +11,7 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    cartScreenController.getUserDetailsFromPrefs();
     return Scaffold(
       appBar: commonAppBarModule('Cart'),
 

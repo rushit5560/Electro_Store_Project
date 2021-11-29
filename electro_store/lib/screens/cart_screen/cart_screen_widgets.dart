@@ -1,6 +1,8 @@
+import 'package:electro_store/common/api_url.dart';
 import 'package:electro_store/common/app_colors.dart';
-import 'package:electro_store/common/app_images.dart';
+import 'package:electro_store/common/common_widgets.dart';
 import 'package:electro_store/controller/cart_screen_controller/cart_screen_controller.dart';
+import 'package:electro_store/models/cart_screen_model/cart_model.dart';
 import 'package:electro_store/screens/check_out_screen/check_out_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,16 +14,20 @@ class CartScreenModules extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          CartItemsList(),
-          const SizedBox(height: 20),
-          CouponCodeModule(),
-          const SizedBox(height: 20),
-          CheckOutModule(),
-        ],
-      ),
+    return Obx(
+      () => cartScreenController.isLoading.value
+          ? CustomCircularProgressIndicator()
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  CartItemsList(),
+                  const SizedBox(height: 20),
+                  CouponCodeModule(),
+                  const SizedBox(height: 20),
+                  CheckOutModule(),
+                ],
+              ),
+            ),
     );
   }
 }
@@ -33,16 +39,17 @@ class CartItemsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 3,
+      itemCount: cartScreenController.userCartProductLists.length,
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index){
-        return _cartItemsListTile();
+        Cartditeil cartSingleItem = cartScreenController.userCartProductLists[index];
+        return _cartItemsListTile(cartSingleItem);
       },
     );
   }
 
-  _cartItemsListTile() {
+  _cartItemsListTile(Cartditeil cartSingleItem) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 6),
       child: Material(
@@ -59,9 +66,9 @@ class CartItemsList extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: _imageAndNameModule(),
+                  child: _imageAndNameModule(cartSingleItem),
                 ),
-                _incAndDecButtons(),
+                _incAndDecButtons(cartSingleItem),
               ],
             ),
           ),
@@ -70,13 +77,13 @@ class CartItemsList extends StatelessWidget {
     );
   }
 
-  Widget _imageAndNameModule() {
+  Widget _imageAndNameModule(Cartditeil cartSingleItem) {
     return Container(
       child: Row(
         children: [
-          _removeButton(),
+          _removeButton(cartSingleItem),
           const SizedBox(width: 10),
-          _imageModule(),
+          _imageModule(cartSingleItem),
           const SizedBox(width: 10),
 
           Expanded(
@@ -85,14 +92,14 @@ class CartItemsList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                      'Nulla Faucibus, turpis eu lacinia',
+                      '${cartSingleItem.productname}',
                     maxLines: 1,
                   ),
                   const SizedBox(height: 5),
                   Row(
                     children: [
                       Text(
-                        '\$200',
+                        '\$${cartSingleItem.productcost}',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: AppColors.kPinkColor,
@@ -100,7 +107,7 @@ class CartItemsList extends StatelessWidget {
                       ),
                       const SizedBox(width: 5),
                       Text(
-                        '\$210',
+                        '\$${cartSingleItem.productcost}',
                         style: TextStyle(
                           decoration: TextDecoration.lineThrough,
                         ),
@@ -117,10 +124,12 @@ class CartItemsList extends StatelessWidget {
     );
   }
 
-  Widget _removeButton() {
+  Widget _removeButton(Cartditeil cartSingleItem) {
     return GestureDetector(
       onTap: () {
-        print('Remove');
+        var cartDetailId = cartSingleItem.cartDetailId;
+        cartScreenController.getDeleteProductCart(cartDetailId);
+        cartScreenController.getUserDetailsFromPrefs();
       },
       child: Container(
         decoration: BoxDecoration(
@@ -132,43 +141,49 @@ class CartItemsList extends StatelessWidget {
     );
   }
 
-  Widget _imageModule() {
+  Widget _imageModule(Cartditeil cartSingleItem) {
     return Container(
       width: 55,
       height: 55,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         image: DecorationImage(
-          image: AssetImage('${AppImages.ic_category2_img}'),
+          image: NetworkImage(
+             ApiUrl.ApiMainPath + "asset/uploads/product/" + '${cartSingleItem.showimg}'
+          ),
           fit: BoxFit.cover,
         ),
       ),
     );
   }
 
-  Widget _incAndDecButtons() {
+  Widget _incAndDecButtons(Cartditeil cartSingleItem) {
     return Container(
       child: Row(
         children: [
           GestureDetector(
             onTap: () {
-              if(cartScreenController.qty > 1){
-                cartScreenController.qty--;
+              if(cartSingleItem.cquantity > 1) {
+                int cartQty = cartSingleItem.cquantity;
+                int cartQtyDec = cartQty - 1;
+                print('cquantity -- : $cartQtyDec');
+                cartScreenController.getAddProductCartQty(cartQtyDec, cartSingleItem.cartDetailId);
+                cartScreenController.getUserDetailsFromPrefs();
               }
             },
             child: Icon(Icons.remove_rounded),
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 5),
-            child: Obx(
-                () => Text('${cartScreenController.qty}')
-            ),
+            child: Text('${cartSingleItem.cquantity}'),
           ),
           GestureDetector(
             onTap: () {
-              if(cartScreenController.qty < 9){
-                cartScreenController.qty++;
-              }
+              int cartQty = cartSingleItem.cquantity;
+              int cartQtyInc = cartQty + 1;
+              print('cquantity ++ : $cartQtyInc');
+              cartScreenController.getAddProductCartQty(cartQtyInc, cartSingleItem.cartDetailId);
+              cartScreenController.getUserDetailsFromPrefs();
             },
             child: Icon(Icons.add_rounded),
           ),
