@@ -97,7 +97,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           () => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
-          productDetailsScreenController.productDetailLists.length,
+          productDetailsScreenController.productDetailLists[0].images.length,
               (index) => Container(
             margin: EdgeInsets.all(4),
             width: 11,

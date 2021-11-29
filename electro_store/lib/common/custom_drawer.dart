@@ -6,6 +6,7 @@ import 'package:electro_store/screens/contact_us_screen/contact_us_screen.dart';
 import 'package:electro_store/screens/notification_screen/notification_screen.dart';
 import 'package:electro_store/screens/profile_screen/profile_screen.dart';
 import 'package:electro_store/screens/settings_screen/settings_screen.dart';
+import 'package:electro_store/screens/sign_in_screen/sign_in_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -42,7 +43,8 @@ class CustomDrawer extends StatelessWidget {
                   ),
                 ),
               ),
-              LogoutButton(),
+              // LogoutButton(),
+              LoginButton(),
             ],
           ),
         ),
@@ -269,6 +271,26 @@ class LogoutButton extends StatelessWidget {
       leading: Icon(Icons.logout_rounded, color: Colors.white),
       title: Text(
         'Logout',
+        textScaleFactor: 1.2,
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
+}
+
+class LoginButton extends StatelessWidget {
+  const LoginButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Get.back();
+        Get.to(()=> SignInScreen());
+      },
+      leading: Icon(Icons.logout_rounded, color: Colors.white),
+      title: Text(
+        'LogIn',
         textScaleFactor: 1.2,
         style: TextStyle(color: Colors.white),
       ),
