@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
+import 'package:electro_store/models/product_details_screen_model/addtocart_model.dart';
 import 'package:electro_store/models/product_details_screen_model/product_detail_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:electro_store/common/api_url.dart';
@@ -46,6 +47,38 @@ class ProductDetailsScreenController extends GetxController {
 
     } catch(e) {
       print('Product Details Error : $e');
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  productAddToCart() async {
+    isLoading(true);
+    String url = ApiUrl.AddToCartApi;
+    print('Url : $url');
+    print('productId : $productId');
+
+    try{
+      int productQty = 1;
+      Map data = {
+        "product_id": "$productId",
+        "user_id": "$userId",
+        "quantity": "$productQty"
+      };
+      print('data : $data');
+
+      http.Response response = await http.post(Uri.parse(url), body: data);
+      AddToCartData addToCartData =AddToCartData.fromJson(json.decode(response.body));
+      isStatus = addToCartData.success.obs;
+
+      if(isStatus.value) {
+        print('True True');
+        Get.snackbar('', 'Product Add in Cart Successfully');
+      } else {
+        print('False False');
+      }
+    } catch(e){
+      print('Product Add To Cart Error : $e');
     } finally {
       isLoading(false);
     }

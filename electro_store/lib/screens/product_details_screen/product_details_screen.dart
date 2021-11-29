@@ -120,7 +120,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Product Name & Fav Button
+          // Product Name & Cart Button
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -134,17 +134,26 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 ),
               ),
               const SizedBox(width: 10),
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.kPinkColor,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: Icon(
-                    Icons.favorite_rounded,
-                    color: Colors.white,
-                    size: 20,
+              GestureDetector(
+                onTap: () {
+                  if (productDetailsScreenController.userId == null) {
+                    Get.snackbar('Title', 'Login Required');
+                  } else {
+                    productDetailsScreenController.productAddToCart();
+                  }
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.kPinkColor,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: Icon(
+                      Icons.shopping_cart_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                   ),
                 ),
               ),
