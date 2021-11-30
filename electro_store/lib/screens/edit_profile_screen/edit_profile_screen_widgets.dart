@@ -1,5 +1,8 @@
 import 'package:electro_store/common/app_colors.dart';
 import 'package:electro_store/common/app_images.dart';
+import 'package:electro_store/controller/edit_profile_screen_controller/edit_profile_screen_controller.dart';
+import 'package:electro_store/models/edit_profile_screen_model/country_model.dart';
+import 'package:electro_store/models/edit_profile_screen_model/state_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,6 +12,7 @@ class EditProfileScreenModule extends StatelessWidget {
   TextEditingController passwordFieldController;
   TextEditingController addressFieldController;
   TextEditingController phoneNoFieldController;
+  EditProfileScreenController editProfileScreenController;
 
   EditProfileScreenModule({
     required this.userNameFieldController,
@@ -16,7 +20,10 @@ class EditProfileScreenModule extends StatelessWidget {
     required this.passwordFieldController,
     required this.addressFieldController,
     required this.phoneNoFieldController,
+    required this.editProfileScreenController,
   });
+
+  List<String> dropDownList = <String>['Select Gender', 'Male', 'Female'];
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +37,18 @@ class EditProfileScreenModule extends StatelessWidget {
           _userNameModule(),
           const SizedBox(height: 30),
           _userNameTextField(),
-          const SizedBox(height: 15),
-          _emailIdTextField(),
-          const SizedBox(height: 15),
-          _passwordTextField(),
-          const SizedBox(height: 15),
-          _addressTextField(),
-          const SizedBox(height: 15),
-          _phoneNoTextField(),
+          const SizedBox(height: 30),
+          _countryDropDown(),
+          const SizedBox(height: 30),
+          _stateDropDown(),
+          // const SizedBox(height: 15),
+          // _emailIdTextField(),
+          // const SizedBox(height: 15),
+          // _passwordTextField(),
+          // const SizedBox(height: 15),
+          // _addressTextField(),
+          // const SizedBox(height: 15),
+          // _phoneNoTextField(),
           const SizedBox(height: 30),
           _updateButton(),
         ],
@@ -83,7 +94,6 @@ class EditProfileScreenModule extends StatelessWidget {
       ],
     );
   }
-
   Widget _userNameModule() {
     return Text(
       'Jenny Doe',
@@ -103,39 +113,75 @@ class EditProfileScreenModule extends StatelessWidget {
     );
   }
 
-  Widget _emailIdTextField() {
-    return TextFormField(
-      maxLines: 1,
-      controller: emailIdFieldController,
-      keyboardType: TextInputType.emailAddress,
-      decoration: inputDecoration('Email Id'),
+  Widget _countryDropDown() {
+    return Obx(
+      () => Container(
+        padding: EdgeInsets.only(left: 10, right: 10),
+        width: Get.width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(35),
+          border: Border.all(color: Colors.grey),
+        ),
+        child: DropdownButton<Datum>(
+          value: editProfileScreenController.countryDropDownValue,
+          icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
+          style: const TextStyle(color: Colors.grey),
+          isExpanded: true,
+          underline: Container(
+            height: 1,
+            color: Colors.white,
+          ),
+          onChanged: (newValue) {
+            editProfileScreenController.countryDropDownValue!.name = newValue!.name;
+            print("countryDropDownValue : ${editProfileScreenController.countryDropDownValue!.name}");
+            print("countryDropDownValue ID : ${newValue.id}");
+            editProfileScreenController.getStateData(newValue.id);
+          },
+
+          items: editProfileScreenController.countryLists
+              .map<DropdownMenuItem<Datum>>((Datum value) {
+            return DropdownMenuItem<Datum>(
+              value: value,
+              child: Text(value.name),
+            );
+          }).toList(),
+        ),
+      ),
     );
   }
 
-  Widget _passwordTextField() {
-    return TextFormField(
-      maxLines: 1,
-      controller: passwordFieldController,
-      keyboardType: TextInputType.text,
-      decoration: inputDecoration('Password'),
-    );
-  }
-
-  Widget _addressTextField() {
-    return TextFormField(
-      maxLines: 1,
-      controller: addressFieldController,
-      keyboardType: TextInputType.text,
-      decoration: inputDecoration('Address'),
-    );
-  }
-
-  Widget _phoneNoTextField() {
-    return TextFormField(
-      maxLines: 1,
-      controller: phoneNoFieldController,
-      keyboardType: TextInputType.phone,
-      decoration: inputDecoration('Phone No.'),
+  Widget _stateDropDown() {
+    return Obx(
+          () => Container(
+        padding: EdgeInsets.only(left: 10, right: 10),
+        width: Get.width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(35),
+          border: Border.all(color: Colors.grey),
+        ),
+        child: DropdownButton<DatumState>(
+          value: editProfileScreenController.stateDropDownValue,
+          icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
+          style: const TextStyle(color: Colors.grey),
+          isExpanded: true,
+          underline: Container(
+            height: 1,
+            color: Colors.white,
+          ),
+          onChanged: (newValue) {
+            editProfileScreenController.stateDropDownValue!.name = newValue!.name;
+            print(editProfileScreenController.stateDropDownValue);
+            print('newValue!.name : ${newValue.name}');
+          },
+          items: editProfileScreenController.stateLists
+              .map<DropdownMenuItem<DatumState>>((DatumState value) {
+            return DropdownMenuItem<DatumState>(
+              value: value,
+              child: Text(value.name),
+            );
+          }).toList(),
+        ),
+      ),
     );
   }
 
@@ -190,3 +236,39 @@ InputDecoration inputDecoration(String hintText) {
     ),
   );
 }
+
+// Widget _emailIdTextField() {
+//   return TextFormField(
+//     maxLines: 1,
+//     controller: emailIdFieldController,
+//     keyboardType: TextInputType.emailAddress,
+//     decoration: inputDecoration('Email Id'),
+//   );
+// }
+//
+// Widget _passwordTextField() {
+//   return TextFormField(
+//     maxLines: 1,
+//     controller: passwordFieldController,
+//     keyboardType: TextInputType.text,
+//     decoration: inputDecoration('Password'),
+//   );
+// }
+//
+// Widget _addressTextField() {
+//   return TextFormField(
+//     maxLines: 1,
+//     controller: addressFieldController,
+//     keyboardType: TextInputType.text,
+//     decoration: inputDecoration('Address'),
+//   );
+// }
+//
+// Widget _phoneNoTextField() {
+//   return TextFormField(
+//     maxLines: 1,
+//     controller: phoneNoFieldController,
+//     keyboardType: TextInputType.phone,
+//     decoration: inputDecoration('Phone No.'),
+//   );
+// }
