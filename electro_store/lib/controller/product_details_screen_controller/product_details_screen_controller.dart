@@ -10,12 +10,14 @@ import 'package:electro_store/common/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:electro_store/models/product_details_screen_model/get_product_review_model.dart';
 
 class ProductDetailsScreenController extends GetxController {
   int productId = Get.arguments;
   RxBool isLoading = false.obs;
   RxBool isStatus = false.obs;
   RxList<Datum> productDetailLists = RxList();
+  RxList<Datum1> productReviewList = RxList();
   var userId;
 
   RxInt activeIndex = 0.obs;
@@ -53,6 +55,7 @@ class ProductDetailsScreenController extends GetxController {
     } finally {
       isLoading(false);
     }
+    getProductReview();
   }
 
   productAddToCart() async {
@@ -117,6 +120,34 @@ class ProductDetailsScreenController extends GetxController {
     }
   }
 
+  getProductReview() async {
+    isLoading(true);
+    String url = ApiUrl.ProductReviewApi;
+    print('Url : $url');
+
+    try{
+      Map data = {
+        "productid": "$productId"
+      };
+      print('data : $data');
+      http.Response response = await http.post(Uri.parse(url), body: data);
+      ProductReviewData productReviewData = ProductReviewData.fromJson(json.decode(response.body));
+
+      isStatus = productReviewData.success.obs;
+
+      if(isStatus.value){
+        productReviewList.clear();
+        productReviewList = productReviewData.data.obs;
+        print('productReviewList : $productReviewList');
+      } else {
+        print('Product Review False False');
+      }
+    } catch(e){
+      print('Product Review Error : $e');
+    } finally {
+      isLoading(false);
+    }
+  }
 
   @override
   void onInit() {

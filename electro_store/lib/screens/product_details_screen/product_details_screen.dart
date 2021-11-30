@@ -277,10 +277,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
           const SizedBox(height: 10),
           ListView.builder(
-            itemCount: 2,
+            itemCount: 10,
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index){
+              double rating = double.parse("${productDetailsScreenController.productReviewList[index].ratings}");
+              DateTime date = productDetailsScreenController.productReviewList[index].createdDate;
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Material(
@@ -294,18 +296,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ),
                       child: Row(
                         children: [
-                          Container(
-                            width: Get.width * 0.15,
-                            height: Get.width * 0.15,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: AssetImage('${AppImages.ic_profile_img}'),
-                                fit: BoxFit.cover
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
+                          // Container(
+                          //   width: Get.width * 0.15,
+                          //   height: Get.width * 0.15,
+                          //   decoration: BoxDecoration(
+                          //     shape: BoxShape.circle,
+                          //     image: DecorationImage(
+                          //       image: AssetImage('${AppImages.ic_profile_img}'),
+                          //       fit: BoxFit.cover
+                          //     ),
+                          //   ),
+                          // ),
+                          // const SizedBox(width: 10),
                           Expanded(
                             child: Container(
                               child: Column(
@@ -314,7 +316,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   Row(
                                     children: [
                                       Text(
-                                        'Jenny Doe',
+                                        '${productDetailsScreenController.productReviewList[index].username}',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -329,26 +331,24 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         itemSize: 18,
                                         minRating: 1,
                                         glow: false,
-                                        initialRating: 4.5,
+                                        initialRating: rating,
                                         itemBuilder: (context, _) {
                                           return Icon(
                                             Icons.star_rounded,
                                             color: AppColors.kOrangeColor,
                                           );
                                         },
-                                        onRatingUpdate: (rating) {
-                                          print(rating);
-                                        },
+                                        onRatingUpdate: (rating) {},
                                       ),
                                     ],
                                   ),
                                   Text(
-                                    '20 Dec 2019',
+                                    '${date.day}-${date.month}-${date.year}',
                                     textScaleFactor: 0.9,
                                   ),
                                   const SizedBox(height: 3),
                                   Text(
-                                    'Present Faucibus elementum nisl Present Faucibus elementum nisl Present ',
+                                    '${productDetailsScreenController.productReviewList[index].comment}',
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
