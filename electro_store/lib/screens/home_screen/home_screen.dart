@@ -6,7 +6,7 @@ import 'package:electro_store/common/common_widgets.dart';
 import 'package:electro_store/common/custom_appbar.dart';
 import 'package:electro_store/common/custom_drawer.dart';
 import 'package:electro_store/controller/home_screen_controller/home_screen_controller.dart';
-import 'package:electro_store/models/collection_screen_model/collection_model.dart';
+import 'package:electro_store/models/home_screen_model/featured_product_model.dart';
 import 'package:electro_store/screens/product_details_screen/product_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -246,7 +246,7 @@ class HomeScreen extends StatelessWidget {
         Container(
           height: 160,
           child: GridView.builder(
-            itemCount: homeScreenController.newArrivalList.length,
+            itemCount: homeScreenController.featuredProductLists.length,
             scrollDirection: Axis.horizontal,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 1,
@@ -254,17 +254,21 @@ class HomeScreen extends StatelessWidget {
               childAspectRatio: 1.3,
             ),
             itemBuilder: (context, index){
-              CollectionModel collectionItem = homeScreenController.newArrivalList[index];
+              Datum1 collectionItem = homeScreenController.featuredProductLists[index];
               return Container(
                 child: GestureDetector(
                   onTap: () {
                     print('$index');
-                    Get.to(()=> ProductDetailsScreen());
+                    Get.to(
+                      () => ProductDetailsScreen(),
+                      arguments:
+                          homeScreenController.featuredProductLists[index].id,
+                    );
                   },
                   child: Container(
                     child: Column(
                       children: [
-                        _imageModule('${collectionItem.img}'),
+                        _imageModule('${ApiUrl.ApiMainPath}${collectionItem.showimg}'),
                         const SizedBox(height: 5),
                         _titleAndPriceModule(collectionItem),
                       ],
@@ -290,7 +294,7 @@ class HomeScreen extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
-              image: AssetImage('$img'),
+              image: NetworkImage('$img'),
               fit: BoxFit.cover,
             ),
           ),
@@ -299,14 +303,14 @@ class HomeScreen extends StatelessWidget {
     );
   }
   // New Arrival Module
-  Widget _titleAndPriceModule(CollectionModel collectionItem) {
+  Widget _titleAndPriceModule(Datum1 collectionItem) {
     return Expanded(
       flex: 25,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${collectionItem.title}',
+            '${collectionItem.productname}',
             maxLines: 1,
           ),
           const SizedBox(height: 5),
@@ -314,7 +318,7 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                '\$200',
+                '\$${collectionItem.productcost}',
                 style: TextStyle(
                   color: AppColors.kPinkColor,
                   fontWeight: FontWeight.bold,
@@ -322,7 +326,7 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(width: 3),
               Text(
-                '\$210',
+                '\$${collectionItem.productcost}',
                 style: TextStyle(
                     decoration: TextDecoration.lineThrough
                 ),
@@ -348,7 +352,7 @@ class HomeScreen extends StatelessWidget {
         Container(
           height: 160,
           child: GridView.builder(
-            itemCount: homeScreenController.newArrivalList.length,
+            itemCount: homeScreenController.featuredProductLists.length,
             scrollDirection: Axis.horizontal,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 1,
@@ -356,16 +360,20 @@ class HomeScreen extends StatelessWidget {
               childAspectRatio: 1.3,
             ),
             itemBuilder: (context, index){
-              CollectionModel collectionItem = homeScreenController.newArrivalList[index];
+              Datum1 collectionItem = homeScreenController.featuredProductLists[index];
               return Container(
                 child: GestureDetector(
                   onTap: () {
-                    print('$index');
+                    Get.to(
+                          () => ProductDetailsScreen(),
+                      arguments:
+                      homeScreenController.featuredProductLists[index].id,
+                    );
                   },
                   child: Container(
                     child: Column(
                       children: [
-                        _imageModule('${collectionItem.img}'),
+                        _imageModule('${ApiUrl.ApiMainPath}${collectionItem.showimg}'),
                         const SizedBox(height: 5),
                         _titleAndPriceModule(collectionItem),
                       ],
