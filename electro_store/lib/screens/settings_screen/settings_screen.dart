@@ -33,6 +33,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 15),
                 NewSale(),
                 const SizedBox(height: 15),
+                ChangePassword(),
+                const SizedBox(height: 15),
               ],
             ),
           ),

@@ -1,6 +1,8 @@
 import 'package:electro_store/common/app_colors.dart';
+import 'package:electro_store/screens/change_password_screen/change_password_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class NotificationModule extends StatefulWidget {
   const NotificationModule({Key? key}) : super(key: key);
@@ -242,6 +244,37 @@ class _NewSaleState extends State<NewSale> {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class ChangePassword extends StatelessWidget {
+  const ChangePassword({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Get.to(()=> ChangePasswordScreen());
+      },
+      child: Material(
+        borderRadius: BorderRadius.circular(35),
+        elevation: 10,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+          child: Container(
+            width: Get.width,
+            child: Text(
+              'Change Password',
+              textScaleFactor: 1.3,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ),
       ),
