@@ -384,7 +384,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           const SizedBox(height: 10),
           RatingBar.builder(
             itemCount: 5,
-            // ignoreGestures: true,
             unratedColor: AppColors.kLightOrangeColor,
             allowHalfRating: true,
             itemSize: 18,
@@ -398,7 +397,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               );
             },
             onRatingUpdate: (rating) {
-              print(rating);
+              productDetailsScreenController.reviewRating = rating;
             },
           ),
           const SizedBox(height: 10),
@@ -407,7 +406,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             maxLines: 3,
             decoration: InputDecoration(
               hintText: 'Comment',
-
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(color: Colors.grey),
@@ -419,17 +417,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ),
           ),
           const SizedBox(height: 10),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: AppColors.kPinkColor,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
-              child: Text(
-                'Submit',
-                style: TextStyle(
-                  color: Colors.white
+          GestureDetector(
+            onTap: () {
+              productDetailsScreenController.addProductReview(
+                  "${productDetailsScreenController.reviewRating}",
+                  "${reviewFieldController.text.trim()}");
+              reviewFieldController.clear();
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: AppColors.kPinkColor,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+                child: Text(
+                  'Submit',
+                  style: TextStyle(
+                    color: Colors.white
+                  ),
                 ),
               ),
             ),

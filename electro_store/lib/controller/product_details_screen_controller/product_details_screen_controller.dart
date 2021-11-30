@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:ui';
+import 'package:electro_store/models/product_details_screen_model/add_product_review_model.dart';
 import 'package:electro_store/models/product_details_screen_model/addtocart_model.dart';
 import 'package:electro_store/models/product_details_screen_model/product_detail_model.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:electro_store/common/api_url.dart';
 import 'package:electro_store/common/app_images.dart';
@@ -22,6 +24,7 @@ class ProductDetailsScreenController extends GetxController {
     Colors.blue, Colors.red, Colors.lightGreenAccent, Colors.orangeAccent,
   ];
   RxInt activeColor = 0.obs;
+  double reviewRating = 0;
 
 
   getProductDetailData() async {
@@ -79,6 +82,36 @@ class ProductDetailsScreenController extends GetxController {
       }
     } catch(e){
       print('Product Add To Cart Error : $e');
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  addProductReview(ratings, comment) async {
+    isLoading(true);
+    String url = ApiUrl.AddProductReviewApi;
+    print('Url : $url');
+    print('productId : $productId');
+
+    try{
+      Map data = {
+        "userid": "$userId",
+        "productid": "$productId",
+        "ratings": "$ratings",
+        "comment": "$comment"
+      };
+
+      http.Response response = await http.post(Uri.parse(url), body: data);
+      AddProductReviewData addProductReviewData = AddProductReviewData.fromJson(json.decode(response.body));
+      isStatus = addProductReviewData.success.obs;
+
+      if(isStatus.value){
+        Fluttertoast.showToast(msg: "${addProductReviewData.message.toString()}");
+      } else {
+        print('Else False');
+      }
+    } catch(e) {
+      print('Add Product Review False');
     } finally {
       isLoading(false);
     }
