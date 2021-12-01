@@ -12,7 +12,7 @@ class EditProfileScreenController extends GetxController {
   RxBool isStatus = false.obs;
   Datum? countryDropDownValue;
   DatumState? stateDropDownValue;
-
+  DatumCity? cityDropDownValue;
 
   RxList<Datum> countryLists = RxList();
   RxList<DatumState> stateLists = [DatumState(id: 0, name: 'Select State', countryId: 0)].obs;
@@ -30,6 +30,7 @@ class EditProfileScreenController extends GetxController {
       isStatus = countryList.success.obs;
 
       if(isStatus.value){
+        countryLists.clear();
         countryLists = countryList.data.obs;
         countryDropDownValue = countryLists[0];
         print('countryLists : $countryLists');
@@ -62,7 +63,7 @@ class EditProfileScreenController extends GetxController {
         stateLists.add(DatumState(id: 0, name: 'Select State', countryId: 0));
         stateLists.addAll(stateData.data);
         stateDropDownValue = stateLists[0];
-        print('stateLists : $stateLists');
+        print('stateLists : ${stateLists.length}');
       } else {
         print('State False False');
       }
@@ -80,7 +81,7 @@ class EditProfileScreenController extends GetxController {
 
     try{
       Map data = {
-        "id": stateId
+        "id": "$stateId"
       };
 
       http.Response response = await http.post(Uri.parse(url), body: data);
@@ -88,7 +89,12 @@ class EditProfileScreenController extends GetxController {
       isStatus = cityData.success.obs;
 
       if(isStatus.value){
+        cityLists.clear();
+        cityLists.add(DatumCity(id: 0, name: 'Select City', stateId: 0));
         cityLists.addAll(cityData.data);
+        cityLists.addAll(cityData.data);
+        cityDropDownValue = cityLists[0];
+        print('cityLists : ${cityLists.length}');
       } else {
         print('City False False');
       }
@@ -103,6 +109,12 @@ class EditProfileScreenController extends GetxController {
   void onInit() {
     getAllCountryData();
     stateDropDownValue = stateLists[0];
+    cityDropDownValue = cityLists[0];
     super.onInit();
+  }
+
+  loading(){
+    isLoading(true);
+    isLoading(false);
   }
 }

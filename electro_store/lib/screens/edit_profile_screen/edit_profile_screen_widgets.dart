@@ -1,6 +1,7 @@
 import 'package:electro_store/common/app_colors.dart';
 import 'package:electro_store/common/app_images.dart';
 import 'package:electro_store/controller/edit_profile_screen_controller/edit_profile_screen_controller.dart';
+import 'package:electro_store/models/edit_profile_screen_model/city_model.dart';
 import 'package:electro_store/models/edit_profile_screen_model/country_model.dart';
 import 'package:electro_store/models/edit_profile_screen_model/state_model.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,8 @@ class EditProfileScreenModule extends StatelessWidget {
           _countryDropDown(),
           const SizedBox(height: 30),
           _stateDropDown(),
+          const SizedBox(height: 30),
+          _cityDropDown(),
           // const SizedBox(height: 15),
           // _emailIdTextField(),
           // const SizedBox(height: 15),
@@ -170,12 +173,50 @@ class EditProfileScreenModule extends StatelessWidget {
           ),
           onChanged: (newValue) {
             editProfileScreenController.stateDropDownValue!.name = newValue!.name;
-            print(editProfileScreenController.stateDropDownValue);
-            print('newValue!.name : ${newValue.name}');
+            print("stateDropDownValue : ${editProfileScreenController.stateDropDownValue}");
+            print('newValue.name : ${newValue.name}');
+            editProfileScreenController.getCityData(newValue.id);
+            editProfileScreenController.loading();
           },
           items: editProfileScreenController.stateLists
               .map<DropdownMenuItem<DatumState>>((DatumState value) {
             return DropdownMenuItem<DatumState>(
+              value: value,
+              child: Text(value.name),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget _cityDropDown() {
+    return Obx(
+          () => Container(
+        padding: EdgeInsets.only(left: 10, right: 10),
+        width: Get.width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(35),
+          border: Border.all(color: Colors.grey),
+        ),
+        child: DropdownButton<DatumCity>(
+          value: editProfileScreenController.cityDropDownValue,
+          icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
+          style: const TextStyle(color: Colors.grey),
+          isExpanded: true,
+          underline: Container(
+            height: 1,
+            color: Colors.white,
+          ),
+          onChanged: (newValue) {
+            editProfileScreenController.cityDropDownValue!.name = newValue!.name;
+            print("cityDropDownValue : ${editProfileScreenController.cityDropDownValue}");
+            print('newValue.name : ${newValue.name}');
+            editProfileScreenController.loading();
+          },
+          items: editProfileScreenController.cityLists
+              .map<DropdownMenuItem<DatumCity>>((DatumCity value) {
+            return DropdownMenuItem<DatumCity>(
               value: value,
               child: Text(value.name),
             );
@@ -190,7 +231,7 @@ class EditProfileScreenModule extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: GestureDetector(
         onTap: () {
-          Get.back();
+
         },
         child: Container(
           width: Get.width,
