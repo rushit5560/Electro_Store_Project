@@ -4,10 +4,13 @@ import 'package:electro_store/common/api_url.dart';
 import 'package:electro_store/models/edit_profile_screen_model/city_model.dart';
 import 'package:electro_store/models/edit_profile_screen_model/country_model.dart';
 import 'package:electro_store/models/edit_profile_screen_model/state_model.dart';
+import 'package:electro_store/models/edit_profile_screen_model/update_profile_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfileScreenController extends GetxController {
+  var userId;
   RxBool isLoading = false.obs;
   RxBool isStatus = false.obs;
   Datum? countryDropDownValue;
@@ -105,12 +108,51 @@ class EditProfileScreenController extends GetxController {
     }
   }
 
+  updateProfileData(String userName) async {
+    isLoading(true);
+    String url = ApiUrl.UpdateUserProfileApi;
+    print('Url : $url');
+
+    try{
+      Map data = {
+        "userid": "$userId",
+        "name": "$userName",
+        "country": "${countryDropDownValue!.id}",
+        "state": "${stateDropDownValue!.id}",
+        "city": "${cityDropDownValue!.id}"
+      };
+      print('data : $data');
+
+      http.Response response = await http.post(Uri.parse(url), body: data);
+      UpdateProfileData updateProfileData = UpdateProfileData.fromJson(json.decode(response.body));
+      isStatus = updateProfileData.success.obs;
+
+      if(isStatus.value){
+        Get.back();
+        Get.snackbar('Success', '${updateProfileData.message}');
+      } else {
+        Get.snackbar('Failed', '${updateProfileData.message}');
+      }
+    } catch(e){
+      print('Update Profile Error : $e');
+    } finally {
+      isLoading(false);
+    }
+  }
+
   @override
   void onInit() {
     getAllCountryData();
+    getUserDetailsFromPrefs();
     stateDropDownValue = stateLists[0];
     cityDropDownValue = cityLists[0];
     super.onInit();
+  }
+
+  getUserDetailsFromPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId = prefs.getInt('id');
+    print('UserId : $userId');
   }
 
   loading(){

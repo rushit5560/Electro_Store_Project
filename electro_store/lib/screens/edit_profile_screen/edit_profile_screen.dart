@@ -32,7 +32,6 @@ class EditProfileScreen extends StatelessWidget {
               passwordFieldController: passwordFieldController,
               addressFieldController: addressFieldController,
               phoneNoFieldController: phoneNoFieldController,
-              editProfileScreenController: editProfileScreenController,
             ),
           ),
         ],

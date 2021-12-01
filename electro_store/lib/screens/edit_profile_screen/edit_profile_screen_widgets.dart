@@ -13,7 +13,7 @@ class EditProfileScreenModule extends StatelessWidget {
   TextEditingController passwordFieldController;
   TextEditingController addressFieldController;
   TextEditingController phoneNoFieldController;
-  EditProfileScreenController editProfileScreenController;
+  EditProfileScreenController editProfileScreenController = Get.find();
 
   EditProfileScreenModule({
     required this.userNameFieldController,
@@ -21,7 +21,6 @@ class EditProfileScreenModule extends StatelessWidget {
     required this.passwordFieldController,
     required this.addressFieldController,
     required this.phoneNoFieldController,
-    required this.editProfileScreenController,
   });
 
   List<String> dropDownList = <String>['Select Gender', 'Male', 'Female'];
@@ -30,31 +29,33 @@ class EditProfileScreenModule extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(10),
-      child: Column(
-        children: [
-          const SizedBox(height: 15),
-          _profileImageModule(),
-          const SizedBox(height: 5),
-          _userNameModule(),
-          const SizedBox(height: 30),
-          _userNameTextField(),
-          const SizedBox(height: 30),
-          _countryDropDown(),
-          const SizedBox(height: 30),
-          _stateDropDown(),
-          const SizedBox(height: 30),
-          _cityDropDown(),
-          // const SizedBox(height: 15),
-          // _emailIdTextField(),
-          // const SizedBox(height: 15),
-          // _passwordTextField(),
-          // const SizedBox(height: 15),
-          // _addressTextField(),
-          // const SizedBox(height: 15),
-          // _phoneNoTextField(),
-          const SizedBox(height: 30),
-          _updateButton(),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 15),
+            _profileImageModule(),
+            const SizedBox(height: 5),
+            _userNameModule(),
+            const SizedBox(height: 30),
+            _userNameTextField(),
+            const SizedBox(height: 30),
+            _countryDropDown(),
+            const SizedBox(height: 30),
+            _stateDropDown(),
+            const SizedBox(height: 30),
+            _cityDropDown(),
+            // const SizedBox(height: 15),
+            // _emailIdTextField(),
+            // const SizedBox(height: 15),
+            // _passwordTextField(),
+            // const SizedBox(height: 15),
+            // _addressTextField(),
+            // const SizedBox(height: 15),
+            // _phoneNoTextField(),
+            const SizedBox(height: 30),
+            _updateButton(),
+          ],
+        ),
       ),
     );
   }
@@ -136,6 +137,7 @@ class EditProfileScreenModule extends StatelessWidget {
           ),
           onChanged: (newValue) {
             editProfileScreenController.countryDropDownValue!.name = newValue!.name;
+            editProfileScreenController.countryDropDownValue!.id = newValue.id;
             print("countryDropDownValue : ${editProfileScreenController.countryDropDownValue!.name}");
             print("countryDropDownValue ID : ${newValue.id}");
             editProfileScreenController.getStateData(newValue.id);
@@ -173,6 +175,7 @@ class EditProfileScreenModule extends StatelessWidget {
           ),
           onChanged: (newValue) {
             editProfileScreenController.stateDropDownValue!.name = newValue!.name;
+            editProfileScreenController.stateDropDownValue!.id = newValue.id;
             print("stateDropDownValue : ${editProfileScreenController.stateDropDownValue}");
             print('newValue.name : ${newValue.name}');
             editProfileScreenController.getCityData(newValue.id);
@@ -210,6 +213,7 @@ class EditProfileScreenModule extends StatelessWidget {
           ),
           onChanged: (newValue) {
             editProfileScreenController.cityDropDownValue!.name = newValue!.name;
+            editProfileScreenController.cityDropDownValue!.id = newValue.id;
             print("cityDropDownValue : ${editProfileScreenController.cityDropDownValue}");
             print('newValue.name : ${newValue.name}');
             editProfileScreenController.loading();
@@ -231,7 +235,9 @@ class EditProfileScreenModule extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: GestureDetector(
         onTap: () {
-
+          editProfileScreenController.updateProfileData(
+              "${userNameFieldController.text.trim()}"
+          );
         },
         child: Container(
           width: Get.width,
