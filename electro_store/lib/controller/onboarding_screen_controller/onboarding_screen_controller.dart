@@ -1,7 +1,9 @@
 import 'package:electro_store/common/app_images.dart';
 import 'package:electro_store/models/onboarding_screen_model/onboarding_model.dart';
+import 'package:electro_store/screens/index_screen/index_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 String msg = 'Explore Products Explore Products Explore Products Explore Products Explore Products Explore Products Explore Products';
 
@@ -32,17 +34,17 @@ class OnBoardingScreenController extends GetxController {
 
   forwardAction() {
     if(isLastPage){
-      // setOnBoardingValue();
-      // Get.off(() => IndexPage());
+      setOnBoardingValue();
+      Get.off(() => IndexScreen());
     } else {
       pageController.nextPage(duration: 300.milliseconds, curve: Curves.ease);
     }
   }
 
-  // setOnBoardingValue() async {
-  //   print('Call Set Value Method');
-  //   SharedPreferences  prefs = await SharedPreferences.getInstance();
-  //   prefs.setBool("onboarding", true);
-  //   print('Set Value : ${prefs.getBool("onboarding")}');
-  // }
+  setOnBoardingValue() async {
+    print('Call Set Value Method');
+    SharedPreferences  prefs = await SharedPreferences.getInstance();
+    prefs.setBool("onboarding", true);
+    print('Set Value : ${prefs.getBool("onboarding")}');
+  }
 }

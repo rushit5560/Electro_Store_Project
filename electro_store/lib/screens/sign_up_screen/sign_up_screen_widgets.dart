@@ -138,7 +138,7 @@ class SignInText extends StatelessWidget {
         GestureDetector(
           onTap: () {
             print('Sign In');
-            Get.to(()=> SignInScreen());
+            Get.off(()=> SignInScreen());
           },
           child: Text(
             'Sign In',

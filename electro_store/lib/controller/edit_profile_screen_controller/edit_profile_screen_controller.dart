@@ -48,7 +48,7 @@ class EditProfileScreenController extends GetxController {
   }
 
   getStateData(int countryId) async {
-    isLoading(true);
+    // isLoading(true);
     String url = ApiUrl.StateApi;
     print('Url : $url');
 
@@ -73,7 +73,8 @@ class EditProfileScreenController extends GetxController {
     } catch(e) {
       print('State Error : $e');
     } finally {
-      isLoading(false);
+      // isLoading(false);
+      loading();
     }
   }
 

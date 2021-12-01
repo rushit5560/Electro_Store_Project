@@ -32,42 +32,44 @@ class SignUpScreen extends StatelessWidget {
             ),
           ),
         ) :
-        SafeArea(
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Logo(),
-                const SizedBox(height: 40),
-                Form(
-                  key: formkey,
-                  child: Column(
-                    children: [
-                      UserNameField(userNameFieldController: userNameFieldController),
-                      const SizedBox(height: 15),
-                      EmailField(emailFieldController: emailFieldController),
-                      const SizedBox(height: 15),
-                      PasswordField(passwordFieldController: passwordFieldController),
-                      const SizedBox(height: 25),
-                      SignUpButton(
-                        emailFieldController: emailFieldController,
-                        passwordFieldController: passwordFieldController,
-                        userNameFieldController: userNameFieldController,
-                        signUpScreenController: signUpScreenController,
-                        formkey: formkey,
-                      ),
-                    ],
+        SingleChildScrollView(
+          child: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Logo(),
+                  const SizedBox(height: 40),
+                  Form(
+                    key: formkey,
+                    child: Column(
+                      children: [
+                        UserNameField(userNameFieldController: userNameFieldController),
+                        const SizedBox(height: 15),
+                        EmailField(emailFieldController: emailFieldController),
+                        const SizedBox(height: 15),
+                        PasswordField(passwordFieldController: passwordFieldController),
+                        const SizedBox(height: 25),
+                        SignUpButton(
+                          emailFieldController: emailFieldController,
+                          passwordFieldController: passwordFieldController,
+                          userNameFieldController: userNameFieldController,
+                          signUpScreenController: signUpScreenController,
+                          formkey: formkey,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
 
-                const SizedBox(height: 25),
-                SignInText(),
-                const SizedBox(height: 25),
-                Or(),
-                const SizedBox(height: 25),
-                SocialButtons(),
-              ],
+                  const SizedBox(height: 25),
+                  SignInText(),
+                  const SizedBox(height: 25),
+                  Or(),
+                  const SizedBox(height: 25),
+                  SocialButtons(),
+                ],
+              ),
             ),
           ),
         ),

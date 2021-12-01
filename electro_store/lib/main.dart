@@ -1,4 +1,4 @@
-import 'package:electro_store/screens/index_screen/index_screen.dart';
+import 'package:electro_store/screens/splash_screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'common/app_theme.dart';
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: appLightTheme(),
 
-      home: IndexScreen(),
+      home: SplashScreen(),
     );
   }
 }

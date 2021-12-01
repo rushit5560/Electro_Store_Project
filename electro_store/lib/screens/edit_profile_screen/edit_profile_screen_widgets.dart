@@ -60,7 +60,6 @@ class EditProfileScreenModule extends StatelessWidget {
     );
   }
 
-
   Widget _profileImageModule() {
     return Stack(
       clipBehavior: Clip.none,
@@ -94,17 +93,15 @@ class EditProfileScreenModule extends StatelessWidget {
             ),
           ),
         ),
-
       ],
     );
   }
+
   Widget _userNameModule() {
     return Text(
       'Jenny Doe',
       textScaleFactor: 1.3,
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-      ),
+      style: TextStyle(fontWeight: FontWeight.bold),
     );
   }
 
@@ -128,7 +125,8 @@ class EditProfileScreenModule extends StatelessWidget {
         ),
         child: DropdownButton<Datum>(
           value: editProfileScreenController.countryDropDownValue,
-          icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
+          icon:
+              const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
           style: const TextStyle(color: Colors.grey),
           isExpanded: true,
           underline: Container(
@@ -136,13 +134,14 @@ class EditProfileScreenModule extends StatelessWidget {
             color: Colors.white,
           ),
           onChanged: (newValue) {
-            editProfileScreenController.countryDropDownValue!.name = newValue!.name;
+            editProfileScreenController.countryDropDownValue!.name =
+                newValue!.name;
             editProfileScreenController.countryDropDownValue!.id = newValue.id;
-            print("countryDropDownValue : ${editProfileScreenController.countryDropDownValue!.name}");
+            print(
+                "countryDropDownValue : ${editProfileScreenController.countryDropDownValue!.name}");
             print("countryDropDownValue ID : ${newValue.id}");
             editProfileScreenController.getStateData(newValue.id);
           },
-
           items: editProfileScreenController.countryLists
               .map<DropdownMenuItem<Datum>>((Datum value) {
             return DropdownMenuItem<Datum>(
@@ -157,7 +156,7 @@ class EditProfileScreenModule extends StatelessWidget {
 
   Widget _stateDropDown() {
     return Obx(
-          () => Container(
+      () => Container(
         padding: EdgeInsets.only(left: 10, right: 10),
         width: Get.width,
         decoration: BoxDecoration(
@@ -166,7 +165,8 @@ class EditProfileScreenModule extends StatelessWidget {
         ),
         child: DropdownButton<DatumState>(
           value: editProfileScreenController.stateDropDownValue,
-          icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
+          icon:
+              const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
           style: const TextStyle(color: Colors.grey),
           isExpanded: true,
           underline: Container(
@@ -174,9 +174,11 @@ class EditProfileScreenModule extends StatelessWidget {
             color: Colors.white,
           ),
           onChanged: (newValue) {
-            editProfileScreenController.stateDropDownValue!.name = newValue!.name;
+            editProfileScreenController.stateDropDownValue!.name =
+                newValue!.name;
             editProfileScreenController.stateDropDownValue!.id = newValue.id;
-            print("stateDropDownValue : ${editProfileScreenController.stateDropDownValue}");
+            print(
+                "stateDropDownValue : ${editProfileScreenController.stateDropDownValue}");
             print('newValue.name : ${newValue.name}');
             editProfileScreenController.getCityData(newValue.id);
             editProfileScreenController.loading();
@@ -195,7 +197,7 @@ class EditProfileScreenModule extends StatelessWidget {
 
   Widget _cityDropDown() {
     return Obx(
-          () => Container(
+      () => Container(
         padding: EdgeInsets.only(left: 10, right: 10),
         width: Get.width,
         decoration: BoxDecoration(
@@ -204,7 +206,8 @@ class EditProfileScreenModule extends StatelessWidget {
         ),
         child: DropdownButton<DatumCity>(
           value: editProfileScreenController.cityDropDownValue,
-          icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
+          icon:
+              const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.grey),
           style: const TextStyle(color: Colors.grey),
           isExpanded: true,
           underline: Container(
@@ -212,9 +215,11 @@ class EditProfileScreenModule extends StatelessWidget {
             color: Colors.white,
           ),
           onChanged: (newValue) {
-            editProfileScreenController.cityDropDownValue!.name = newValue!.name;
+            editProfileScreenController.cityDropDownValue!.name =
+                newValue!.name;
             editProfileScreenController.cityDropDownValue!.id = newValue.id;
-            print("cityDropDownValue : ${editProfileScreenController.cityDropDownValue}");
+            print(
+                "cityDropDownValue : ${editProfileScreenController.cityDropDownValue}");
             print('newValue.name : ${newValue.name}');
             editProfileScreenController.loading();
           },
@@ -235,9 +240,8 @@ class EditProfileScreenModule extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: GestureDetector(
         onTap: () {
-          editProfileScreenController.updateProfileData(
-              "${userNameFieldController.text.trim()}"
-          );
+          editProfileScreenController
+              .updateProfileData("${userNameFieldController.text.trim()}");
         },
         child: Container(
           width: Get.width,
@@ -257,7 +261,6 @@ class EditProfileScreenModule extends StatelessWidget {
       ),
     );
   }
-
 }
 
 InputDecoration inputDecoration(String hintText) {

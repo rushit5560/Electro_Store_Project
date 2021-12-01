@@ -330,7 +330,8 @@ InputDecoration inputDecoration() {
 }
 
 class CheckOutModule extends StatelessWidget {
-  const CheckOutModule({Key? key}) : super(key: key);
+  // const CheckOutModule({Key? key}) : super(key: key);
+  CartScreenController cartScreenController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -344,13 +345,12 @@ class CheckOutModule extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '\$300',
+                '\$${cartScreenController.userCartTotalAmount}',
                 textScaleFactor: 1.3,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               GestureDetector(
                 onTap: () {
-                  print('CheckOut');
                   Get.to(()=> CheckOutScreen());
                 },
                 child: Container(
